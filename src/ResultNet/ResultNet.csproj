@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>result-master-net</PackageId>
+    <Title>Result Master Net</Title>
+    <Description>This is a  library for  API response or any cases</Description>
+  </PropertyGroup>
+
+</Project>
