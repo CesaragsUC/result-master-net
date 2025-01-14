@@ -1,35 +1,45 @@
+
 # FluentResultNet :rocket:
 
-**FluentResultNet** é uma biblioteca .NET que facilita o gerenciamento de retornos padronizados para métodos em aplicações. Este pacote oferece uma abordagem unificada para lidar com sucessos, falhas, mensagens de erro e exceções, reduzindo a complexidade no tratamento de respostas em métodos síncronos e assíncronos.
+**FluentResultNet** is a .NET library that simplifies the management of standardized returns for methods in applications. This package offers a unified approach to handling successes, failures, error messages, and exceptions, reducing the complexity of response handling in synchronous and asynchronous methods.
 
-## Funcionalidades
+## Features
 
-- **Retornos Padronizados**: Garante consistência nos retornos de métodos em toda a aplicação.
-- **Mensagens Detalhadas**: Suporte para mensagens personalizadas em operações de sucesso ou falha.
-- **Manipulação de Exceções**: Captura e encapsula exceções para manter o controle de erros no fluxo da aplicação.
-- **Suporte a Operações Assíncronas**: Métodos `SuccessAsync` e `FailureAsync` para facilitar o uso em cenários assíncronos.
-- **Códigos de Resposta**: Retorna códigos de status HTTP (`200`, `400`, `500`, etc.) para facilitar a integração com APIs.
+- **Standardized Returns**: Ensures consistency in method returns throughout the application.
+- **Detailed Messages**: Supports custom messages in success or failure operations.
+- **Exception Handling**: Captures and encapsulates exceptions to maintain error control in the application flow.
+- **Support for Asynchronous Operations**: `SuccessAsync` and `FailureAsync` methods make it easier to use in asynchronous scenarios.
+- **Response Codes**: Returns HTTP status codes (`200`, `400`, `500`, etc.) to simplify API integration.
 
-## Exemplo de Uso
+## Usage Example
 
-### Serviço
+
 ```csharp
-public async Task<Result<List<FuncionarioDto>>> List()
+public class EmployeeDto
+{
+	public int Id {get; set;}
+	public string Name {get; set;}
+	public string Email {get; set;}
+}
+```
+
+```csharp
+public async Task<Result<List<EmployeeDto>>> List()
 {
     try
     {
-        var funcionarios = await _funcionarioRepository.List();
+        var employees = await _employeeRepository.List();
 
-        var funcionarioDtos = _mapper.Map<List<FuncionarioDto>>(funcionarios);
+        var employeeDtos = _mapper.Map<List<EmployeeDto>>(employees);
 
-        if (funcionarioDtos is null)
-            return Result<List<FuncionarioDto>>.Failure("Nenhum funcionário encontrado");
+        if (employeeDtos is null)
+            return Result<List<EmployeeDto>>.Failure("No employees found");
 
-        return await Result<List<FuncionarioDto>>.SuccessAsync(funcionarioDtos);
+        return await Result<List<EmployeeDto>>.SuccessAsync(employeeDtos);
     }
     catch (Exception ex)
     {
-        return await Result<List<FuncionarioDto>>.FailureAsync(500, "Falha no serviço.");
+        return await Result<List<EmployeeDto>>.FailureAsync(500, "Service failure.");
     }
 }
 ```
@@ -40,26 +50,51 @@ public async Task<Result<List<FuncionarioDto>>> List()
 [Route("all")]
 public async Task<IActionResult> Get()
 {
-    var result = await _funcionarioService.List();
+    var result = await _employeeService.List();
     return result.Succeeded ? Ok(result) : BadRequest(result);
 }
 ```
-### ⚙️ Instalação:
+Output:
+
+```json
+{
+    "messages": [],
+    "succeeded": true,
+    "data": {
+		[
+			{
+			   "id": 1,
+			   "name": "jhon doe",
+			   "email": "jhon@email.com"
+			},
+			{
+			   "id": 2,
+			   "name": "lupito lisk",
+			   "email": "lupito@email.com"
+			}
+		]
+    },
+    "exception": null,
+    "code": 200
+}
+```
+
+### ⚙️ Installation:
 
 ```html
 Install-Package FluentResultNet
 ```
 
-🤝 Contribuição
+🤝 Contribution
 
-Contribuições são bem-vindas!
+Contributions are welcome!
 
-* Faça um fork do repositório.
-* Crie uma branch para sua feature (git checkout -b feature/NovaFeature).
-* Commit suas mudanças (git commit -m "Adicionei uma nova feature X").
-* Faça um push para a branch (git push origin feature/NovaFeature).
-* Abra um Pull Request.
+* Fork the repository.
+* Create a branch for your feature (git checkout -b feature/NewFeature).
+* Commit your changes (git commit -m "Added a new feature X").
+* Push to the branch (git push origin feature/NewFeature).
+* Open a Pull Request.
 
-⭐ Dê uma estrela!
+⭐ Star the project!
 
-Se você achou este pacote útil, não se esqueça de dar uma ⭐ no GitHub!
+If you found this package useful, don’t forget to give it a ⭐ on GitHub!
